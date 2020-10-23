@@ -1,3 +1,4 @@
+{-# LANGUAGE AllowAmbiguousTypes #-}
 {-# LANGUAGE DataKinds           #-}
 {-# LANGUAGE FlexibleContexts    #-}
 {-# LANGUAGE ScopedTypeVariables #-}
@@ -101,6 +102,20 @@ instance (GConName a, GConName b) => GConName (Either a b) where
 instance KnownSymbol n => GConName (Con n a) where
   gConName _ = symbolVal $ Proxy @n
 
+class GConIx a where
+  gConIx    :: a -> Int
+  gConCount :: Int
+
+instance GConIx (Con n a) where
+  gConIx _  = 0
+  gConCount = 1
+
+instance (GConIx a, GConIx b) => GConIx (Either a b) where
+  gConIx (Left  x) = gConIx x
+  gConIx (Right x) = gConCount @a + gConIx x
+
+  gConCount = gConCount @a + gConCount @b
+
 eq :: (Generic a, GEq (Rep a)) => a -> a -> Bool
 eq x y = geq (from x) (from y)
 
@@ -109,6 +124,9 @@ enum = to <$> genum
 
 conName :: (Generic a, GConName (Rep a)) => a -> String
 conName = gConName . from
+
+conIx :: (Generic a, GConIx (Rep a)) => a -> Int
+conIx = gConIx . from
 
 tree1, tree2 :: Tree Integer
 tree1 = Node (Leaf 1) (Leaf 2)
@@ -143,8 +161,13 @@ testConName = do
   test Green
   test Blue
 
+testConIx :: IO ()
+testConIx = putStrLn
+  $ "conIx test: Colour: " <> show (conIx <$> enum @Colour)
+
 testModule1 :: IO ()
 testModule1 = do
   testEq
   testEnum
   testConName
+  testConIx
