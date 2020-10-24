@@ -31,8 +31,8 @@ term1 = App term2 term3
 term2 = Abs "abs" term3
 term3 = Var "var"
 
-testEx1 :: IO ()
-testEx1 = do
+testEx01 :: IO ()
+testEx01 = do
   test term1 term2
   test term1 term3
   test term2 term3
