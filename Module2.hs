@@ -1,14 +1,21 @@
-{-# LANGUAGE AllowAmbiguousTypes #-}
-{-# LANGUAGE DataKinds           #-}
-{-# LANGUAGE FlexibleContexts    #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TypeApplications    #-}
-{-# LANGUAGE TypeFamilies        #-}
+{-# LANGUAGE AllowAmbiguousTypes     #-}
+{-# LANGUAGE ConstraintKinds         #-}
+{-# LANGUAGE DataKinds               #-}
+{-# LANGUAGE FlexibleContexts        #-}
+{-# LANGUAGE FlexibleInstances       #-}
+{-# LANGUAGE GADTs                   #-}
+{-# LANGUAGE MultiParamTypeClasses   #-}
+{-# LANGUAGE Rank2Types              #-}
+{-# LANGUAGE ScopedTypeVariables     #-}
+{-# LANGUAGE TypeApplications        #-}
+{-# LANGUAGE TypeFamilies            #-}
+{-# LANGUAGE UndecidableSuperClasses #-}
 
 module Module2 where
 
-import Data.Kind     ( Type )
-import GHC.TypeLits ( Symbol )
+import Data.Kind     ( Constraint, Type )
+import Data.Proxy    ( Proxy (..) )
+import GHC.TypeLits  ( KnownSymbol, Symbol )
 
 data Representation
   = Sum         Representation Representation
@@ -110,6 +117,64 @@ instance GEnum Unit where
 enum :: forall a . (Generic a, GEnum (Code a)) => [a]
 enum = to <$> genum @(Code a)
 
+data SRepresentation (c :: Type -> Constraint) (r :: Representation) where
+  SSum         :: SRepresentation c l
+               -> SRepresentation c r
+               -> SRepresentation c (Sum l r)
+
+  SConstructor :: KnownSymbol n
+               => Proxy n
+               -> SRepresentation c a
+               -> SRepresentation c (Constructor n a)
+
+  SProduct     :: SRepresentation c l
+               -> SRepresentation c r
+               -> SRepresentation c (Product l r)
+
+  SUnit        :: SRepresentation c Unit
+
+  SAtom        :: c a
+               => SRepresentation c (Atom a)
+
+class IsRepresentation (c :: Type -> Constraint) (r :: Representation) where
+  representation :: SRepresentation c r
+
+instance (IsRepresentation c l, IsRepresentation c r)
+  => IsRepresentation c (Sum l r) where
+  representation = SSum representation representation
+
+instance (IsRepresentation c a, KnownSymbol n)
+  => IsRepresentation c (Constructor n a) where
+  representation = SConstructor Proxy representation
+
+instance (IsRepresentation c l, IsRepresentation c r)
+  => IsRepresentation c (Product l r) where
+  representation = SProduct representation representation
+
+instance IsRepresentation c Unit where
+  representation = SUnit
+
+instance c a => IsRepresentation c (Atom a) where
+  representation = SAtom
+
+class Top a
+instance Top a
+
+class (c a, d a) => And c d a
+instance (c a, d a) => And c d a
+
+geq' :: SRepresentation Eq a -> Interpret a -> Interpret a -> Bool
+geq' (SSum         l _) (Left  x) (Left  y) = geq' l x y
+geq' (SSum         _ r) (Right x) (Right y) = geq' r x y
+geq' (SSum         _ _) _         _         = False
+geq' (SConstructor _ a) x         y         = geq' a x y
+geq' (SProduct     l r) (x1, y1)  (x2, y2)  = geq' l x1 x2 && geq' r y1 y2
+geq' SUnit              ()        ()        = True
+geq' SAtom              x         y         = x == y
+
+eq' :: forall a . (Generic a, IsRepresentation Eq (Code a)) => a -> a -> Bool
+eq' x y = geq' (representation @Eq @(Code a)) (from x) (from y)
+
 tree1, tree2 :: Tree Integer
 tree1 = Node (Leaf 1) (Leaf 2)
 tree2 = Leaf 1
@@ -129,12 +194,29 @@ testEq = do
                 <> " == "
                 <> show y
                 <> ": "
-                <> show (x == y)
+                <> show (eq x y)
 
 testEnum :: IO ()
 testEnum = putStrLn $ "enum test: Colour: " <> show (enum @Colour)
+
+testEq' = do
+  test tree1 tree2
+  test tree1 tree1
+  test tree2 tree2
+  test Red   Blue
+  test Green Blue
+  test Green Red
+  test Blue  Blue
+  where test x y = putStrLn
+                 $ "eq' test: "
+                <> show x
+                <> " == "
+                <> show y
+                <> ": "
+                <> show (eq' x y)
 
 testModule2 :: IO ()
 testModule2 = do
   testEq
   testEnum
+  testEq'
