@@ -4,13 +4,18 @@
 module Exercise02 where
 
 import Module1
-import Exercise01
 
 class GCmp a where
   gcmp :: a -> a -> Ordering
 
+instance GCmp a => GCmp (Con n a) where
+  gcmp (Con x) (Con y) = gcmp x y
+
 instance Ord a => GCmp (Wrap a) where
   gcmp (Wrap x) (Wrap y) = compare x y
+
+instance GCmp () where
+  gcmp () () = EQ
 
 instance (GCmp a, GCmp b) => GCmp (Either a b) where
   gcmp (Right x) (Right y) = gcmp x y
@@ -24,9 +29,6 @@ instance (GCmp a, GCmp b) => GCmp (a, b) where
     rest -> rest
 
 instance Ord a => Ord (Tree a) where
-  compare = cmp
-
-instance Ord Term where
   compare = cmp
 
 cmp :: (Generic a, GCmp (Rep a)) => a -> a -> Ordering
