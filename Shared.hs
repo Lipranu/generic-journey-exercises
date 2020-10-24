@@ -134,13 +134,6 @@ tree2 = Leaf 1
 
 testEq :: IO ()
 testEq = do
-  let test x y = putStrLn
-               $ "eq test: "
-              <> show x
-              <> " == "
-              <> show y
-              <> ": "
-              <> show (x == y)
   test tree1 tree2
   test tree1 tree1
   test tree2 tree2
@@ -148,22 +141,36 @@ testEq = do
   test Green Blue
   test Green Red
   test Blue  Blue
+  where test x y = putStrLn
+                 $ "eq test: "
+                <> show x
+                <> " == "
+                <> show y
+                <> ": "
+                <> show (x == y)
 
 testEnum :: IO ()
 testEnum = putStrLn $ "enum test: Colour: " <> show (enum @Colour)
 
 testConName :: IO ()
 testConName = do
-  let test x = putStrLn $ "conName test: " <> show x <> ": " <> conName x
   test tree1
   test tree2
   test Red
   test Green
   test Blue
+  where test x = putStrLn $ "conName test: " <> show x <> ": " <> conName x
 
 testConIx :: IO ()
-testConIx = putStrLn
-  $ "conIx test: Colour: " <> show (conIx <$> enum @Colour)
+testConIx = do
+  test tree1
+  test tree2
+  test Red
+  test Green
+  test Blue
+  putStrLn $ "conIx test: Colours: " <> show (conIx <$> enum @Colour)
+  where test x = putStrLn
+               $ "conIx test: " <> show x <> ": " <> show (conIx x)
 
 testModule1 :: IO ()
 testModule1 = do
