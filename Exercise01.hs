@@ -33,9 +33,16 @@ term3 = Var "var"
 
 testEx1 :: IO ()
 testEx1 = do
-  eqTest term1 term2
-  eqTest term1 term3
-  eqTest term2 term3
-  eqTest term1 term1
-  eqTest term2 term2
-  eqTest term3 term3
+  test term1 term2
+  test term1 term3
+  test term2 term3
+  test term1 term1
+  test term2 term2
+  test term3 term3
+  where test x y = putStrLn
+                 $ "eq test: "
+                <> show x
+                <> " == "
+                <> show y
+                <> ": "
+                <> show (x == y)
