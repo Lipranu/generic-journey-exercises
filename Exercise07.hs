@@ -49,9 +49,7 @@ instance KnownSymbol n => GSelNames (Sel n a) where
 selNames :: (Generic a, GSelNames (Rep a)) => a -> [String]
 selNames = gSelNames . from
 
-test :: Test
-test = Test 1 1.0 "1"
-
 testEx07 :: IO ()
 testEx07 = putStrLn
   $ "selNames test: " <> show test <> ": " <> show (selNames test)
+  where test = Test 1 1.0 "1"
