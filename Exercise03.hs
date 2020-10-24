@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies     #-}
 
 module Exercise03 where
@@ -36,3 +37,6 @@ instance (GBaseCase a, GBaseCase b) => GBaseCase (Either a b) where
 
 baseCase :: (Generic a, GBaseCase (Rep a)) => [a]
 baseCase = to <$> gbaseCase
+
+testEx03 :: IO ()
+testEx03 = putStrLn $ "baseCase test: " <> show (baseCase @(Test Int))
