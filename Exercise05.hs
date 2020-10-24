@@ -36,10 +36,8 @@ instance GTotal (Wrap Int) where
 total :: (Generic a, GTotal (Rep a)) => a -> Int
 total = gtotal . from
 
-testEx5 :: IO ()
-testEx5 = do
-  let x   = Bar 3 4 5
-      y   = Baz 2 8
-      f x = putStrLn $ "total " <> show x <> " = " <> show (total x)
-  f x
-  f y
+testEx05 :: IO ()
+testEx05 = test bar >> test baz
+  where test x = putStrLn $ "total " <> show x <> " = " <> show (total x)
+        bar    = Bar 3 4 5
+        baz    = Baz 2 8
