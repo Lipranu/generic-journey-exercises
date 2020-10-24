@@ -37,3 +37,4 @@ show = gshow . from
 testEx08 :: IO ()
 testEx08 = putStrLn
   $ "show test: " <> Prelude.show test <> ": " <> show test
+  where test = Test 1 1.0 "1"
