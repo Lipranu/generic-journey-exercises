@@ -29,3 +29,6 @@ instance (GMemp a, GMemp b) => GMemp (a, b) where
 
 memp :: (Generic a, GMemp (Rep a)) => a
 memp = to $ gmemp
+
+testEx04 :: IO ()
+testEx04 = putStrLn $ "memp test: " <> show (memp @Test)
