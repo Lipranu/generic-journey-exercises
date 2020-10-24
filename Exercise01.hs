@@ -2,7 +2,7 @@
 
 module Exercise01 where
 
-import Shared
+import Module1
 
 data Term
   = App Term Term

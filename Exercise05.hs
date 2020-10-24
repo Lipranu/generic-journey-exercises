@@ -4,7 +4,7 @@
 
 module Exercise05 where
 
-import Shared
+import Module1
 
 data Foo
   = Bar Int Int Int

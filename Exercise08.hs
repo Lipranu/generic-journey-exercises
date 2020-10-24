@@ -5,7 +5,7 @@
 
 module Exercise08 where
 
-import Shared
+import Module1
 import Exercise07
 import Data.Proxy   ( Proxy (..) )
 import GHC.TypeLits ( Symbol, KnownSymbol, symbolVal )

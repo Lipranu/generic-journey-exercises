@@ -3,7 +3,7 @@
 
 module Exercise02 where
 
-import Shared
+import Module1
 import Exercise01
 
 class GCmp a where

@@ -3,7 +3,7 @@
 
 module Exercise03 where
 
-import Shared
+import Module1
 
 data Test a
   = Test

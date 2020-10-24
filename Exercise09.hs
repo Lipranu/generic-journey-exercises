@@ -6,7 +6,7 @@
 
 module Exercise09 where
 
-import Shared
+import Module1
 import Data.Kind    ( Type )
 import GHC.TypeLits ( Symbol )
 

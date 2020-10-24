@@ -5,7 +5,7 @@
 {-# LANGUAGE TypeApplications    #-}
 {-# LANGUAGE TypeFamilies        #-}
 
-module Shared where
+module Module1 where
 
 import Data.Kind    ( Type )
 import Data.Proxy   ( Proxy (..) )
@@ -70,9 +70,9 @@ instance Eq a => GEq (Wrap a) where
   geq (Wrap x) (Wrap y) = x == y
 
 instance (GEq a, GEq b) => GEq (Either a b) where
-  geq (Left x)  (Left y)  = geq x y
+  geq (Left  x) (Left  y)  = geq x y
   geq (Right x) (Right y) = geq x y
-  geq _ _ = False
+  geq _         _         = False
 
 instance (GEq a, GEq b) => GEq (a, b) where
   geq (x1, y1) (x2, y2) = geq x1 x2 && geq y1 y2
