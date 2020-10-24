@@ -31,5 +31,25 @@ instance (GCmp a, GCmp b) => GCmp (a, b) where
 instance Ord a => Ord (Tree a) where
   compare = cmp
 
+instance Ord Colour where
+  compare = cmp
+
 cmp :: (Generic a, GCmp (Rep a)) => a -> a -> Ordering
 cmp x y = gcmp (from x) (from y)
+
+testEx02 :: IO ()
+testEx02 = do
+  test tree1 tree2
+  test tree1 tree1
+  test tree2 tree2
+  test Red   Blue
+  test Green Blue
+  test Green Red
+  test Blue  Blue
+  where test x y = putStrLn
+                 $ "cmp test: "
+                <> show x
+                <> " `compare` "
+                <> show y
+                <> ": "
+                <> show (compare x y)
