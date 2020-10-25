@@ -184,6 +184,21 @@ genum' SUnit = [()]
 enum' :: forall a . (Generic a, IsRepresentation Top (Code a)) => [a]
 enum' = to <$> genum' (representation @Top @(Code a))
 
+type family IsEnumRepresentation (r :: Representation) :: Constraint where
+  IsEnumRepresentation (Sum         l r) = ( IsEnumRepresentation l
+                                           , IsEnumRepresentation r
+                                           )
+  IsEnumRepresentation (Constructor _ a) = a ~ Unit
+
+type IsEnumType a = (Generic a, IsEnumRepresentation (Code a))
+
+genum'' :: IsEnumRepresentation a => SRepresentation Top a -> [Interpret a]
+genum'' (SSum l r) = (Left <$> genum'' l) ++ (Right <$> genum'' r)
+genum'' (SConstructor _ a) = [()]
+
+enum'' :: forall a . (IsEnumType a, IsRepresentation Top (Code a)) => [a]
+enum'' = to <$> genum'' (representation @Top @(Code a))
+
 tree1, tree2 :: Tree Integer
 tree1 = Node (Leaf 1) (Leaf 2)
 tree2 = Leaf 1
@@ -231,9 +246,14 @@ testEnum' = do
   where test  n x = putStrLn $ "enum' test: " <> n <> x
         handler e = print (e :: PatternMatchFail)
 
+
+testEnum'' :: IO ()
+testEnum'' = putStrLn $ "enum'' test: Colour: " <> show (enum'' @Colour)
+
 testModule2 :: IO ()
 testModule2 = do
   testEq
   testEnum
   testEq'
   testEnum'
+  testEnum''
