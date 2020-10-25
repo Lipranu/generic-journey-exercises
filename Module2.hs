@@ -13,9 +13,10 @@
 
 module Module2 where
 
-import Data.Kind     ( Constraint, Type )
-import Data.Proxy    ( Proxy (..) )
-import GHC.TypeLits  ( KnownSymbol, Symbol )
+import Control.Exception ( PatternMatchFail, catch )
+import Data.Kind         ( Constraint, Type )
+import Data.Proxy        ( Proxy (..) )
+import GHC.TypeLits      ( KnownSymbol, Symbol )
 
 data Representation
   = Sum         Representation Representation
@@ -175,6 +176,14 @@ geq' SAtom              x         y         = x == y
 eq' :: forall a . (Generic a, IsRepresentation Eq (Code a)) => a -> a -> Bool
 eq' x y = geq' (representation @Eq @(Code a)) (from x) (from y)
 
+genum' :: SRepresentation Top a -> [Interpret a]
+genum' (SSum l r) = (Left <$> genum' l) ++ (Right <$> genum' r)
+genum' (SConstructor _ a) = genum' a
+genum' SUnit = [()]
+
+enum' :: forall a . (Generic a, IsRepresentation Top (Code a)) => [a]
+enum' = to <$> genum' (representation @Top @(Code a))
+
 tree1, tree2 :: Tree Integer
 tree1 = Node (Leaf 1) (Leaf 2)
 tree2 = Leaf 1
@@ -215,8 +224,16 @@ testEq' = do
                 <> ": "
                 <> show (eq' x y)
 
+testEnum' :: IO ()
+testEnum' = do
+  test "Colour: " (show (enum' @Colour))
+  (test "Tree: "  (show (enum' @(Tree Int)))) `catch` handler
+  where test  n x = putStrLn $ "enum' test: " <> n <> x
+        handler e = print (e :: PatternMatchFail)
+
 testModule2 :: IO ()
 testModule2 = do
   testEq
   testEnum
   testEq'
+  testEnum'
