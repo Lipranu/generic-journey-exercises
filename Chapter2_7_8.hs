@@ -11,7 +11,7 @@
 {-# LANGUAGE TypeFamilies          #-}
 {-# LANGUAGE TypeOperators         #-}
 
-module Chapter2_7'8 where
+module Chapter2_7_8 where
 
 import Data.Void ( Void )
 import Data.Kind ( Constraint, Type )
@@ -89,6 +89,9 @@ instance IsList c '[] where
 
 type IsRepresentation c xss = IsList (IsList c) xss
 
+class Top a
+instance Top a
+
 --geqProduct :: SList Eq x -> InterpretProduct x -> InterpretProduct x -> Bool
 --geqProduct (SCons rs) (x, xs) (y, ys) = x == y && geqProduct rs xs ys
 --geqProduct SNil       ()      ()      = True
@@ -117,8 +120,8 @@ geqProduct xs x y = and $ zipProduct xs (==) x y
 eq :: forall a . (Generic a, IsRepresentation Eq (Code a)) => a -> a -> Bool
 eq x y = geqSum (list @_ @(IsList Eq) @(Code a)) (from x) (from y)
 
-testCh2_7'8 :: IO ()
-testCh2_7'8 = do
+testCh2_7_8 :: IO ()
+testCh2_7_8 = do
   test tree1 tree2
   test tree1 tree1
   test tree2 tree2
