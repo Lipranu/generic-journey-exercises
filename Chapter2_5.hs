@@ -183,11 +183,10 @@ testEq = do
   test Green Blue
   test Green Red
   test Blue  Blue
-  where
-    tree1    = Node (Leaf 1) (Leaf 2)
-    tree2    = Leaf 1
-    test x y = putStrLn $ "eq test: "
-            <> show x <> " == " <> show y <> ": " <> show (x == y)
+  where tree1    = Node (Leaf 1) (Leaf 2)
+        tree2    = Leaf 1
+        test x y = putStrLn $ "eq test: "
+                <> show x <> " == " <> show y <> ": " <> show (x == y)
 
 testEnum :: IO ()
 testEnum = putStrLn $ "enum test: Colour: " <> show (enum @Colour)

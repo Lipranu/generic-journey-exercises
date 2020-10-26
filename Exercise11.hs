@@ -7,8 +7,8 @@
 
 module Exercise11 where
 
-import Module2
-import GHC.TypeLits  ( KnownSymbol )
+import Chapter2_2
+import GHC.TypeLits ( KnownSymbol )
 
 data Foo
   = Bar Int Int Int

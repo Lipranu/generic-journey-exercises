@@ -7,8 +7,8 @@
 
 module Exercise14 where
 
-import Module2
-import Data.Kind ( Constraint )
+import Chapter2_4
+import Data.Kind  ( Constraint )
 
 data Test a = Test a a a deriving Show
 

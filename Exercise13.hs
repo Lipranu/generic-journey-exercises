@@ -9,7 +9,7 @@
 
 module Exercise13 where
 
-import Module2      hiding ( IsEnumType, IsEnumRepresentation, enum, genum )
+import Chapter2_4   hiding ( IsEnumType, IsEnumRepresentation, enum, genum )
 import Data.Kind           ( Constraint )
 import GHC.TypeLits        ( TypeError, ErrorMessage (..))
 
@@ -38,5 +38,3 @@ enum = to <$> genum (representation @Top @(Code a))
 
 testEx13 :: IO ()
 testEx13 = putStrLn $ "enum test: Colour: " <> show (enum @Colour)
--- enum @(Tree Int) will not work,
--- since it result in type error with custom error message

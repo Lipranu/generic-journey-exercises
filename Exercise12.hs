@@ -7,7 +7,7 @@
 
 module Exercise12 where
 
-import Module2
+import Chapter2_3
 import Control.Exception ( PatternMatchFail, catch )
 import GHC.TypeLits      ( symbolVal )
 
@@ -40,6 +40,10 @@ gConCount (SConstructor _ _) = 1
 
 conIx :: forall a . (Generic a, IsRepresentation Top (Code a)) => a -> Int
 conIx = gConIx (representation @Top @(Code a)) . from
+
+tree1, tree2 :: Tree Int
+tree1 = Node (Leaf 1) (Leaf 2)
+tree2 = Leaf 1
 
 testConName :: IO ()
 testConName = do
