@@ -2,7 +2,7 @@
 
 module Exercise01 where
 
-import Module1
+import Chapter1
 
 data Term
   = App Term Term

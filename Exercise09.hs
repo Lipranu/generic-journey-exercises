@@ -6,7 +6,7 @@
 
 module Exercise09 where
 
-import Module1
+import Chapter1
 import Data.Kind    ( Type )
 import GHC.TypeLits ( Symbol )
 

@@ -3,7 +3,7 @@
 
 module Exercise02 where
 
-import Module1
+import Chapter1
 
 class GCmp a where
   gcmp :: a -> a -> Ordering

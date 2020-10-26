@@ -4,7 +4,7 @@
 
 module Exercise06 where
 
-import Module1
+import Chapter1
 import Data.Proxy   ( Proxy (..) )
 import GHC.TypeLits ( KnownSymbol, symbolVal )
 

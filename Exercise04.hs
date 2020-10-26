@@ -4,7 +4,7 @@
 
 module Exercise04 where
 
-import Module1
+import Chapter1
 import Data.Monoid ( Sum (..), Product (..), All (..), Any (..) )
 
 data Test = Test (Sum Integer) All Any (Product Integer) deriving Show

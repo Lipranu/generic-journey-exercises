@@ -5,7 +5,7 @@
 {-# LANGUAGE TypeApplications    #-}
 {-# LANGUAGE TypeFamilies        #-}
 
-module Module1 where
+module Chapter1 where
 
 import Data.Kind    ( Type )
 import Data.Proxy   ( Proxy (..) )
@@ -172,8 +172,8 @@ testConIx = do
   where test x = putStrLn
                $ "conIx test: " <> show x <> ": " <> show (conIx x)
 
-testModule1 :: IO ()
-testModule1 = do
+testCh1 :: IO ()
+testCh1 = do
   testEq
   testEnum
   testConName

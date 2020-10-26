@@ -4,7 +4,7 @@
 
 module Exercise05 where
 
-import Module1
+import Chapter1
 
 data Foo
   = Bar Int Int Int

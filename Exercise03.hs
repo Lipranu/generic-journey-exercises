@@ -4,7 +4,7 @@
 
 module Exercise03 where
 
-import Module1
+import Chapter1
 
 data Test a
   = Test
