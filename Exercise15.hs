@@ -8,7 +8,7 @@
 
 module Exercise15 where
 
-import Chapter2_7_8
+import Chapter2_8
 import Data.Kind ( Constraint, Type )
 
 type family IsEnumRepresentation (r :: SumRepresentation) :: Constraint where
