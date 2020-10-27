@@ -3,7 +3,7 @@
 
 module Exercise17 where
 
-import Chapter2_11
+import Chapter2_12
 
 mapProduct :: SList c xs
            -> (forall c x . f x -> g x)
