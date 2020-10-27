@@ -9,7 +9,7 @@
 {-# LANGUAGE TypeFamilies          #-}
 {-# LANGUAGE TypeOperators         #-}
 {-# LANGUAGE TypeApplications      #-}
-{-# LANGUAGE ScopedTypeVariables      #-}
+{-# LANGUAGE ScopedTypeVariables   #-}
 {-# LANGUAGE FlexibleContexts      #-}
 
 module Chapter2_11 where
@@ -18,7 +18,6 @@ import Data.Coerce           ( coerce )
 import Data.Functor.Const    ( Const (..) )
 import Data.Functor.Identity ( Identity (..) )
 import Data.Kind             ( Constraint, Type )
-import qualified Data.Monoid as M
 
 data Sum (f :: k -> Type) (xs :: [k]) where
   Zero :: f x      -> Sum f (x : xs)
@@ -65,18 +64,6 @@ instance Generic (Tree a) where
   to (Zero (Identity x `Cons` Nil))                           = Leaf x
   to (Suc (Zero (Identity l `Cons` (Identity r `Cons` Nil)))) = Node l r
 
-data MonoidTest a b c = MonoidTest a b c deriving Show
-
-instance Generic (MonoidTest a b c) where
-  type Code (MonoidTest a b c) = '[ '[a, b, c] ]
-
-  from (MonoidTest x y z) = Zero (Identity x `Cons`
-                                 (Identity y `Cons`
-                                 (Identity z `Cons` Nil)))
-
-  to (Zero (Identity x `Cons` (Identity y `Cons` (Identity z `Cons` Nil))))
-    = MonoidTest x y z
-
 zipProduct :: SList c xs
            -> (forall x . c x => f x -> g x -> h x)
            -> Product f xs
@@ -105,6 +92,3 @@ type IsProductType a xs = (Generic a, Code a ~ '[xs])
 
 gmempty :: forall a xs . (IsProductType a xs, IsList Monoid xs) => a
 gmempty = to $ Zero $ pureProduct (list @_ @Monoid) $ Identity mempty
-
-m :: MonoidTest (M.Sum Integer) (M.Product Integer) M.Any
-m = MonoidTest (M.Sum 1) (M.Product 2) (M.Any True)
