@@ -1,5 +1,5 @@
+{-# LANGUAGE GADTs      #-}
 {-# LANGUAGE Rank2Types #-}
-{-# LANGUAGE GADTs #-}
 
 module Exercise17 where
 
