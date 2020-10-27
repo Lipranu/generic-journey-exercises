@@ -9,7 +9,6 @@
 {-# LANGUAGE TypeFamilies          #-}
 {-# LANGUAGE TypeOperators         #-}
 {-# LANGUAGE TypeApplications      #-}
-{-# LANGUAGE ScopedTypeVariables   #-}
 {-# LANGUAGE FlexibleContexts      #-}
 
 module Chapter2_12 where
@@ -96,7 +95,7 @@ zipProduct (SCons xs) op (Cons fx fxs) (Cons gx gxs)
   = Cons (op fx gx) $ zipProduct xs op fxs gxs
 zipProduct SNil _ Nil Nil = Nil
 
-collapseProduct :: SList c xs -> Product (Const a) as -> [a]
+collapseProduct :: SList c xs -> Product (Const a) xs -> [a]
 collapseProduct (SCons xs) (Cons (Const a) as) = a : collapseProduct xs as
 collapseProduct SNil Nil = []
 
