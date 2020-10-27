@@ -3,7 +3,7 @@
 
 module Exercise18 where
 
-import Chapter2_10
+import Chapter2_11
 import Data.Coerce        ( coerce )
 import Data.Functor.Const ( Const (..) )
 
