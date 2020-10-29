@@ -7,7 +7,7 @@
 
 module Exercise19 where
 
-import Chapter2_12
+import Chapter2_13
 import Data.Coerce           ( coerce )
 import Data.Functor.Identity ( Identity (..) )
 import qualified Data.Monoid as M

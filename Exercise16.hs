@@ -3,7 +3,7 @@
 
 module Exercise16 where
 
-import Chapter2_12
+import Chapter2_13
 import Data.Functor.Identity ( Identity (..) )
 
 data Term

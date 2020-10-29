@@ -11,9 +11,10 @@
 {-# LANGUAGE TypeApplications      #-}
 {-# LANGUAGE FlexibleContexts      #-}
 
-module Chapter2_12 where
+module Chapter2_13 where
 
 import Data.Coerce           ( coerce )
+import Data.Proxy            ( Proxy (..) )
 import Data.Functor.Const    ( Const (..) )
 import Data.Functor.Identity ( Identity (..) )
 import Data.Kind             ( Constraint, Type )
@@ -43,6 +44,9 @@ instance (c x, IsList c xs) => IsList c (x : xs) where
 instance IsList c '[] where
   list = SNil
 
+class Top a
+instance Top a
+
 class Generic a where
   type Code a :: [[Type]]
 
@@ -66,6 +70,9 @@ instance Generic (Tree a) where
 instance Eq a => Eq (Tree a) where
   (==) = eq
 
+instance HasDatatypeInfo (Tree a) where
+  conNames _ = Const "Leaf" `Cons` (Const "Node" `Cons` Nil)
+
 data Colour
   = Red
   | Green
@@ -83,6 +90,11 @@ instance Generic Colour where
   to (Suc (Zero Nil))       = Green
   to (Suc (Suc (Zero Nil))) = Blue
 
+instance HasDatatypeInfo Colour where
+  conNames _ = Const "Red"   `Cons`
+             ( Const "Green" `Cons`
+             ( Const "Blue"  `Cons` Nil ))
+
 instance Eq Colour where
   (==) = eq
 
@@ -98,6 +110,9 @@ zipProduct SNil _ Nil Nil = Nil
 collapseProduct :: SList c xs -> Product (Const a) xs -> [a]
 collapseProduct (SCons xs) (Cons (Const a) as) = a : collapseProduct xs as
 collapseProduct SNil Nil = []
+
+class Generic a => HasDatatypeInfo a where
+  conNames :: Proxy a -> Product (Const String) (Code a)
 
 geqProduct :: SList Eq xs
            -> Product Identity xs
@@ -139,6 +154,14 @@ genum SNil = []
 
 enum :: IsEnumType a => [a]
 enum = to <$> genum (list @_ @((~) '[]))
+
+select :: SList c xs
+       -> (forall x . c x => f x -> g x -> h x)
+       -> Product f xs
+       -> Sum g xs
+       -> Sum h xs
+select (SCons rs) op (Cons _ xs) (Suc next) = Suc  $ select rs op xs next
+select (SCons rs) op (Cons x  _) (Zero  it) = Zero $ op x it
 
 testEq :: IO ()
 testEq = do

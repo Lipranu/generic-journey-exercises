@@ -8,7 +8,7 @@
 
 module Exercise17 where
 
-import Chapter2_12 hiding    ( genum )
+import Chapter2_13 hiding    ( genum )
 import Data.Functor.Const    ( Const (..) )
 import Data.Functor.Identity ( Identity (..) )
 

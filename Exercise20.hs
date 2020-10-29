@@ -6,7 +6,7 @@
 
 module Exercise20 where
 
-import Chapter2_12
+import Chapter2_13
 import Exercise17
 
 data Projection f xs x = MkProjection (Product f xs -> f x)
